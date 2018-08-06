@@ -1,52 +1,48 @@
-import trololol_put
-import trololol_get
+#import trololol_put
+#import trololol_get
 import hashlib
 import random
 import string
 import time
-
+import os
+import binascii
 ##
 # Get random string
 ##
-def randomString(n):
-    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(n))
 
 
+os.system("mkdir flag")
 fo = open("teams.list", "r")
 teams=[]
+
+
 for team in fo.readlines():
     teams.append(team[:-1])
-    ff = open(team[:-1]+"My.flag", "a")
+    ff = open("./flag/"+team[:-1]+".flag", "w")
     ff.close()
 
-
-
-        
 for team in teams:
     print team
-    m = hashlib.md5()
-    m.update(randomString(100))
-    flag=m.hexdigest()
-    trololol_put.trololol_put(team,flag)
+    #m = hashlib.md5()
+    #m.update(randomString(100))
+
     for otherteam in teams:
-        if otherteam!=team:
-            ff = open(otherteam+".flag", "a")
+        if otherteam != teams:
+            flag = binascii.b2a_hex(os.urandom(16))
+            ff = open("./flag/"+otherteam+".flag", "w")
+            fg = open("./flag/"+otherteam+".sent", "w")
             ff.write(flag+"\n")
+            fg.write(flag+"\n")
             ff.close()
+            fg.close()
+        
         else:
-            ff = open(otherteam+"My.flag", "a")
+            flag = binascii.b2a_hex(os.urandom(16))
+            ff = open("./flag/"+otherteam+".flag", "w")
             ff.write(flag+"\n")
+            fg = open("./flag/"+otherteam+".sent", "w")
+            fg.write(flag+"\n")
             ff.close()
-time.sleep(5)
-for team in teams:
-    ff = open(team+"My.flag", "r")
-    flag=ff.readlines()[-1:][0][:-1]
-    ff.close()
-    if trololol_get.trololol_get(team,flag):
-        ff = open(team+".def", "a")
-        ff.write("+")
-        ff.close()
-    else:
-        ff = open(team+".def", "a")
-        ff.write("-")
-        f.close()
+            fg.close()
+time.sleep(3)
+print "done"
